@@ -49,24 +49,23 @@ public class AssortmentTest
   }
 
   /**
-   * Verify that PUT on /isbns/{isbn} returns 200 and allows adding a book to catalogue. Also
-   * verifies the new isbn appears in list and subsequently removes it, to leave server is original
-   * state.
+   * Verify PUT on /isbns/{isbn} returns 200 and allows adding book to catalogue. Optionally
+   * verifies the new isbn appears in assortment list.
    */
   @Test
   public void testIsbnsIsbnPut() throws UnirestException {
 
-    // Using a random ISBN to avoid clash on multiple test run.
+    // Using a random ISBN to avoid collision on repeat.
     String randomIsbn = getRandomIsbn();
     HttpResponse<String> addBookReply = addTestBook(randomIsbn);
     verifyOk(addBookReply);
 
-    // If Read verification enabled: Verify catalogue content (must now contain the new book)
+    // If read verification enabled: Verify catalogue content
     if (RestTestUtils.isReadVerficationsRequested()) {
       String catalogue = Unirest.get(getServiceURL("/isbns")).asString().getBody();
       assert catalogue.contains(randomIsbn);
     } else {
-      System.out.println("READ VERIFICATIONS SKIPPED TO REDUCE TEST CROSS DEPENDENCIES.");
+      System.out.println("READ VERIFICATIONS SKIPPED.");
     }
   }
 }
